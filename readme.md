@@ -21,7 +21,7 @@ Instead of manually scanning your inbox, GlowMail makes relevant emails glow and
 1. Clone this repository or download it as a ZIP:
 
    ```bash
-   git clone https://github.com/yourusername/glowmail.git
+   git clone https://github.com/iolynx/glowmail.git
    ```
 
 2. Navigate to `chrome://extensions`, enable Developer Mode, and Select this folder after clicking on `Load Unpacked`
