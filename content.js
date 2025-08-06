@@ -1,7 +1,8 @@
 let currentAccountData = null;
-let initialScanDone = false;
+let initialScanDone = false; //delete this :cash:
 let seenEmails = new Set();
 let notifiedEmails = new Set();
+let observer = null;
 
 
 function getCurrentAccount() {
@@ -17,50 +18,70 @@ function getCurrentAccount() {
 	return null;
 }
 
-let lastHighlightedEmails = new Set();
+function processEmailRow(row, tags, notifyNew = true) {
+	const emailId = row.getAttribute("data-legacy-thread-id") || row.innerText;
+	const emailText = row.innerText.toLowerCase();
 
-function highlightEmails(tags) {
-	const emailRows = document.querySelectorAll("tr.zA");
+	const matched = tags.some(tag => emailText.includes(tag.toLowerCase()));
 
-	emailRows.forEach(row => {
-		const emailId = row.getAttribute("data-legacy-thread-id") || row.innerText;
-		const emailText = row.innerText.toLowerCase();
+	if (matched) {
+		row.classList.add("highlighted-email");
 
-		const matched = tags.some(tag => emailText.includes(tag.toLowerCase()));
+		if (!seenEmails.has(emailId)) {
+			seenEmails.add(emailId);
 
-		if (matched) {
-			row.classList.add("highlighted-email");
-
-			if (!initialScanDone && !seenEmails.has(emailId)) {
-				seenEmails.add(emailId);
-				console.log('j a ', emailId);
-			}
-
-			if (initialScanDone && !seenEmails.has(emailId)) {
-				console.log('holy shit one j came', emailId);
-				seenEmails.add(emailId)
-
+			if (notifyNew) {
+				// notify if new email
 				const subjectElement = row.querySelector(".bog");
 				const subject = subjectElement ? subjectElement.innerText : "Keyword Match";
 
-				chrome.runtime.sendMessage({ type: "notify", subject })
+				chrome.runtime.sendMessage({ type: "notify", subject });
 			}
-		} else {
-			row.classList.remove("highlighted-email");
 		}
+	} else {
+		row.classList.remove("highlighted-email");
+	}
+}
+
+function reHighlightAll(tags) {
+	const emailRows = document.querySelectorAll("tr.zA");
+	emailRows.forEach(row => processEmailRow(row, tags, false));
+}
+
+function observeNewEmails(tags) {
+	const inboxNode = document.querySelector("div[role='main']");
+	if (!inboxNode) {
+		console.warn("Inbox node not found, retrying...");
+		setTimeout(() => observeNewEmails(tags), 1000);
+		return;
+	}
+
+	if (observer) observer.disconnect();
+
+	observer = new MutationObserver(mutations => {
+		mutations.forEach(mutation => {
+			mutation.addedNodes.forEach(node => {
+				if (node.nodeType === 1 && node.matches("tr.zA")) {
+					processEmailRow(node, tags, true);
+				}
+			});
+		});
 	});
-	initialScanDone = true;
+
+	observer.observe(inboxNode, { childList: true, subtree: true });
+
+	reHighlightAll(tags);
 }
 
 function waitForGmailAccount(callback) {
 	const interval = setInterval(() => {
-		const email = getCurrentAccount(); // your detection function
+		const email = getCurrentAccount();
 
 		if (email) {
 			clearInterval(interval);
 			callback(email);
 		}
-	}, 1000); // check every 1 second
+	}, 1000);
 }
 
 waitForGmailAccount(email => {
@@ -76,17 +97,16 @@ function startHighlighting(account) {
 		currentAccountData = accounts.find(a => a.email === account);
 
 		if (currentAccountData && currentAccountData.tags.length > 0) {
-			setInterval(() => highlightEmails(currentAccountData.tags), 1000);
+			observeNewEmails(currentAccountData.tags);
 		}
 	});
 }
 
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-	console.log('received')
 	if (message.action === "reHighlight") {
+		// seenEmails.clear();
 		startHighlighting(getCurrentAccount());
-		// highlightEmails(currentAccountData?.tags || []);
 	}
 });
 
