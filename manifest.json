@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "GlowMail",
+  "version": "1.0",
+  "permissions": ["storage", "scripting", "activeTab", "notifications"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
+

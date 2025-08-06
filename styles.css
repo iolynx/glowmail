@@ -1,0 +1,93 @@
+
+.highlighted-email {
+  border-radius: 6px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: rgba(255, 0, 0, 0.1) !important;
+  border-left: 4px solid #ff4d4d;
+  box-shadow: 0 0 6px rgba(255, 0, 0, 0.2);
+}
+
+body {
+  font-family: sans-serif;
+  padding: 10px;
+  width: 300px;
+}
+
+.account {
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tags {
+  margin-top: 5px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 4px;
+  border-radius: 2px;
+  background-color: #f0f0f0;
+  font-size: 13px;
+  cursor: default;
+  transition: background-color 0.2s, color 0.2s;
+  position: relative;
+}
+
+.tag::after {
+	content: "";
+}
+
+.tag:hover {
+	background: #e0e0e0;
+	cursor: pointer;
+}
+
+.tag:hover::after {
+	content: " x";
+	font-weight: bold;
+	color: red;
+}
+
+.tag-input {
+  width: 100%;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+.delete-tag-btn {
+  margin-left: 6px;
+  color: #777;
+  font-weight: bold;
+  cursor: pointer;
+  display: none;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tag:hover .delete-tag-btn {
+  display: inline;
+}
+
+.delete-btn:hover {
+  color: darkred;
+}
+
+.delete-tag-btn:hover {
+  color:darkred;
+}
