@@ -13,6 +13,10 @@ body {
   width: 300px;
 }
 
+button {
+  margin-top: 5px;
+}
+
 .account {
   border: 1px solid #ccc;
   padding: 8px;
@@ -43,19 +47,10 @@ body {
   position: relative;
 }
 
-.tag::after {
-	content: "";
-}
-
 .tag:hover {
-	background: #e0e0e0;
-	cursor: pointer;
-}
-
-.tag:hover::after {
-	content: " x";
-	font-weight: bold;
-	color: red;
+  background-color: #ff4d4d;
+  color: white;
+  cursor: pointer;
 }
 
 .tag-input {
@@ -64,24 +59,12 @@ body {
   box-sizing: border-box;
 }
 
-.delete-tag-btn {
-  margin-left: 6px;
-  color: #777;
-  font-weight: bold;
-  cursor: pointer;
-  display: none;
-}
-
 .delete-btn {
   background: none;
   border: none;
   color: red;
   cursor: pointer;
   font-size: 14px;
-}
-
-.tag:hover .delete-tag-btn {
-  display: inline;
 }
 
 .delete-btn:hover {

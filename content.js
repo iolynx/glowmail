@@ -105,7 +105,6 @@ function startHighlighting(account) {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	if (message.action === "reHighlight") {
-		// seenEmails.clear();
 		startHighlighting(getCurrentAccount());
 	}
 });
