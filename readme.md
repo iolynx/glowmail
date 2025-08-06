@@ -2,7 +2,7 @@
 
 GlowMail is a **Chrome extension** that highlights important emails in Gmail and notifies you about new emails matching your chosen keywords or tags.  
 
-Instead of manually scanning your inbox, GlowMail makes relevant emails glow and optionally notifies you in real-time.
+GlowMail scans your inbox and makes relevant emails glow. It also checks for new emails and notifies you in real-time.
 
 ---
 
